@@ -1,0 +1,20 @@
+{
+  "mongoDs": {
+    "host": "127.0.0.1",
+    "port": 27017,
+    "database": "test",
+    "username": "test",
+    "password": "test",
+    "name": "mongoDs",
+    "connector": "mongodb"
+  },
+  "jdJava": {
+    "host": "127.0.0.1",
+    "port": 27017,
+    "database": "test",
+    "username": "test",
+    "password": "test",
+    "name": "jdJava",
+    "connector": "mongodb"
+  }
+}

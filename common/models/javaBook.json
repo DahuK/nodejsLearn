@@ -1,0 +1,38 @@
+{
+  "name": "JavaBook",
+  "properties": {
+    "id": {
+      "type": "Number",
+      "id": true,
+      "idInjection ": true
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "price": {
+      "type": "Number",
+      "required": true
+    },
+    "publisher": {
+      "type": "string",
+      "required": true
+    },
+    "author": {
+      "type": "string",
+      "required": true
+    },
+    "commit": {
+      "type": "Number",
+      "required": true
+    },
+    "shop": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
