@@ -1,35 +1,33 @@
 module.exports = function(JavaBook) {
-	JavaBook.beforeRemote('create', function(context, user, next) {
-//		var req = context.req;
-////		req.body.date = Date.now();
-////		req.body.publisherId = req.accessToken.userId;
-//		next();
+
+	JavaBook.deletedAll = function(cb) {
+		
+		JavaBook.find({
+			where : {
+				and : [ {
+					author : ' Maurice Naftalin '
+				}, {
+					publisher : '\u6e05\u534e\u5927\u5b66\u51fa\u7248\u793e'
+				} ]
+			}
+		}, function(err, posts) {
+			// TODO
+
+			var response = posts;
+			cb(null, response);
+		});
+		
+	};
+
+	JavaBook.remoteMethod('javabook', {
+		http : {
+			path : '/javabook',
+			verb : 'get'
+		},
+		returns : {
+			arg : 'javabook',
+			type : 'string'
+		}
 	});
-};
 
-
-////grab the things we need
-//var mongoose = require('mongoose');
-//var Schema = mongoose.Schema;
-//
-//// create a schema
-//var userSchema = new Schema({
-//  name: String,
-//  username: { type: String, required: true, unique: true },
-//  password: { type: String, required: true },
-//  admin: Boolean,
-//  location: String,
-//  meta: {
-//    age: Number,
-//    website: String
-//  },
-//  created_at: Date,
-//  updated_at: Date
-//});
-//
-//// the schema is useless so far
-//// we need to create a model using it
-//var User = mongoose.model('User', userSchema);
-//
-//// make this available to our users in our Node applications
-//module.exports = User;
+}
