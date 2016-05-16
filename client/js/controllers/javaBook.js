@@ -1,100 +1,86 @@
 angular
-  .module('app')
-  .controller('AllBookController', ['$scope', 'Review', function($scope,
-      Review) {
-    $scope.reviews = Review.find({
-      filter: {
-        include: [
-          'coffeeShop',
-        ]
-      }
-    });
+  .module('app', ['ngTable', 'ngTableResizableColumns'])
+  .controller('AllBookController', ['$scope', 'JavaBook', function($scope, JavaBook) {
+	  $scope.data = JavaBook.find();
+      $scope.tableParams = new NgTableParams({
+          page: 1,            // show first page
+          count: 10           // count per page
+      }, {
+          total: data.length, // length of data
+          getData: function ($defer, params) {
+              // use built-in angular filter
+              var filteredData = params.filter() ?
+                      $filter('filter')(data, params.filter()) :
+                      data;
+              var orderedData = params.sorting() ?
+                      $filter('orderBy')(filteredData, params.orderBy()) :
+                      data;
+
+              params.total(orderedData.length); // set total for recalc pagination
+              $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+          }
+      });
   }])
-  .controller('AddBookController', ['$scope', 'CoffeeShop', 'Review',
-      '$state', function($scope, CoffeeShop, Review, $state) {
+  .controller('AddBookController', ['$scope', 'JavaBook',
+      '$state', function($scope, $state) {
     $scope.action = 'Add';
-    $scope.coffeeShops = [];
-    $scope.selectedShop;
-    $scope.review = {};
+    $scope.book;
     $scope.isDisabled = false;
 
-    CoffeeShop
+    JavaBook
       .find()
       .$promise
-      .then(function(coffeeShops) {
-        $scope.coffeeShops = coffeeShops;
-        $scope.selectedShop = $scope.selectedShop || coffeeShops[0];
+      .then(function(book) {
+        $scope.book = book;
       });
 
     $scope.submitForm = function() {
-      Review
+    	JavaBook
         .create({
-          rating: $scope.review.rating,
-          comments: $scope.review.comments,
-          coffeeShopId: $scope.selectedShop.id
+          name: $scope.book.name,
+          price: $scope.book.price,
+          author: $scope.book.author,
+          publisher: $scope.book.publisher,
+          shop: $scope.book.shop,
+          commit: $scope.book.commit,
+          rating: $scope.book.rating
         })
         .$promise
         .then(function() {
-          $state.go('all-reviews');
+          $state.go('all-books');
         });
     };
   }])
-  .controller('DeleteReviewController', ['$scope', 'Review', '$state',
+  .controller('DeleteBookController', ['$scope', 'JavaBook', '$state',
       '$stateParams', function($scope, Review, $state, $stateParams) {
-    Review
+	  JavaBook
       .deleteById({ id: $stateParams.id })
       .$promise
       .then(function() {
-        $state.go('my-reviews');
+        $state.go('all-books');
       });
   }])
-  .controller('EditReviewController', ['$scope', '$q', 'CoffeeShop', 'Review',
-      '$stateParams', '$state', function($scope, $q, CoffeeShop, Review,
+  .controller('EditBookController', ['$scope', '$q', 'JavaBook',
+      '$stateParams', '$state', function($scope, $q, JavaBook,
       $stateParams, $state) {
     $scope.action = 'Edit';
-    $scope.coffeeShops = [];
-    $scope.selectedShop;
-    $scope.review = {};
+    $scope.book;
     $scope.isDisabled = true;
 
     $q
       .all([
-        CoffeeShop.find().$promise,
-        Review.findById({ id: $stateParams.id }).$promise
+        JavaBook.find().$promise,
+        JavaBook.findById({ id: $stateParams.id }).$promise
       ])
       .then(function(data) {
-        var coffeeShops = $scope.coffeeShops = data[0];
-        $scope.review = data[1];
-        $scope.selectedShop;
-
-        var selectedShopIndex = coffeeShops
-          .map(function(coffeeShop) {
-            return coffeeShop.id;
-          })
-          .indexOf($scope.review.coffeeShopId);
-        $scope.selectedShop = coffeeShops[selectedShopIndex];
+        $scope.book = data;
       });
 
     $scope.submitForm = function() {
-      $scope.review.coffeeShopId = $scope.selectedShop.id;
-      $scope.review
+      $scope.book
         .$save()
-        .then(function(review) {
-          $state.go('all-reviews');
+        .then(function(book) {
+          $state.go('all-books');
         });
     };
   }])
-  .controller('MyReviewsController', ['$scope', 'Review', '$rootScope',
-      function($scope, Review, $rootScope) {
-    $scope.reviews = Review.find({
-      filter: {
-        where: {
-          publisherId: $rootScope.currentUser.id
-        },
-        include: [
-          'coffeeShop',
-          'reviewer'
-        ]
-      }
-    });
-  }]);

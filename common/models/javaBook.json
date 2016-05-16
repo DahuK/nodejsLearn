@@ -29,6 +29,10 @@
     "shop": {
       "type": "string",
       "required": true
+    },
+    "rating": {
+      "type": "string",
+      "required": false
     }
   },
   "validations": [],

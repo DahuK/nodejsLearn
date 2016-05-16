@@ -1,0 +1,28 @@
+<div ng-app="myApp">
+	<div ng-controller="AllBookController as demo">
+		<h2 class="page-header">Java Book</h2>
+		<div class="bs-callout bs-callout-info">
+			<h4>Overview</h4>
+			<p>All data were get from JD.com with Scrapy crawler.</p>
+		</div>
+		<div class="row">
+			<div class="col-md-6" ng-controller="AllBookController as demo">
+				<h3>Java Books</h3>
+				<table ng-table="demo.tableParams"
+					class="table table-condensed table-bordered table-striped">
+					<tr ng-repeat="row in $data">
+						<td data-title="'Name'" filter="{name: 'text'}">{{row.name}}</td>
+						<td data-title="'Price'" filter="{price: 'number'}">{{row.price}}</td>
+						<td data-title="'Author'" filter="{ author 'select'}"
+							filter-data="demo.author">{{row.author}}</td>
+						<td data-title="'Publisher'" filter="{ publisher: 'select'}"
+							filter-data="demo.publisher:">{{row.publisher:}}</td>
+						<td data-title="'Shop'">{{row.shop}}</td>
+						<td data-title="'Commit'" >{{row.commit}}</td>
+						<td data-title="'Rating'" filter="{ rating 'select'}"
+							filter-data="demo.rating">{{row.rating}}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>

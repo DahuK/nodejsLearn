@@ -41,9 +41,9 @@ module.exports = function(app) {
 				if (book.name != null || book.name != "") {
 					
 					app.models.JavaBook.create(book, function(err, u1) {
-						console.log('Created: ', u1.toObject());
+						console.log('Created: ', u1);
 						app.models.JavaBook.findById(u1.id, function(err, u2) {
-							console.log('Found: ', u2.toObject());
+							console.log('Found: ', u2);
 						});
 //						javaBook = mongoDs.createModel('JavaBook', {
 //						    _id: { type: mongoDs.ObjectID, id: true }
